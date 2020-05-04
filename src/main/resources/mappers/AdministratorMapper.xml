@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.booking.dao.AdministratorMapper">
+    <select id="getAdministrator" parameterType="Integer" resultType="com.example.booking.bean.Administrator">
+        select * from administrator where id = #{id}
+    </select>
+
+    <select id="getAdministratorByEmail" parameterType="String" resultType="com.example.booking.bean.Administrator">
+        select * from administrator where email = #{email}
+    </select>
+
+    <insert id="saveAdministrator" parameterType="com.example.booking.bean.Administrator">
+        insert into administrator (id, user_name, password, email) values (#{id}, #{userName}, #{password}, #{email})
+    </insert>
+
+</mapper>

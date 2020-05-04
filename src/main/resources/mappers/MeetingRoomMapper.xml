@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.booking.dao.MeetingRoomMapper">
+    <select id="getMeetingRoom" parameterType="Integer" resultType="com.example.booking.bean.MeetingRoom">
+        select * from meetingroom where id = #{id}
+    </select>
+
+    <select id="getAllMeetingRooms" resultType="com.example.booking.bean.MeetingRoom">
+        select * from meetingroom;
+    </select>
+
+    <insert id="saveMeetingRoom" parameterType="com.example.booking.bean.MeetingRoom">
+        insert into meetingroom (room_number, capacities, price) values (#{roomNumber}, #{capacities}, #{price})
+    </insert>
+
+</mapper>

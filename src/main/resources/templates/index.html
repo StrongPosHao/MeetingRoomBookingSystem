@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>JI Meeting-Room Booking Service</title>
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}" type="text/css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header" id="top-bar">
+        <div class="layui-logo"><i class="layui-icon layui-icon-tree"></i><span class="system-title">MBS</span></div>
+        <div class="layui-nav layui-layout-left" id="search">
+            <input type="text" name="title" required lay-verify="required" placeholder="Please input room number" autocomplete="off"
+                   class="layui-input">
+        </div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img th:src="@{/image/user.png}" class="layui-nav-img">
+                    [[${session.user.userName}]]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">Profile</a></dd>
+                    <dd><a href="">Booking Info</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">Log Out</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <table class="layui-hide" id="test"></table>
+        </div>
+    </div>
+
+<!--    <div class="layui-footer">-->
+<!--        &lt;!&ndash; 底部固定区域 &ndash;&gt;-->
+<!--        © layui.com - 底部固定区域-->
+<!--    </div>-->
+</div>
+<script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
+<script>
+    //JavaScript Code Area
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'/table/rooms'
+            ,cols: [
+                [
+                    {field:'roomNumber', width:400, title: 'Meeting Room Number', sort: true}
+                    ,{field:'capacities', width:400, title: 'Capacity'}
+                    ,{field:'price', width:400, title: 'Price', sort: true}
+                    // ,{field:'city', width:80, title: '城市'}
+                    // ,{field:'sign', title: '签名', minWidth: 150}
+                    // ,{field:'experience', width:80, title: '积分', sort: true}
+                    // ,{field:'score', width:80, title: '评分', sort: true}
+                    // ,{field:'classify', width:80, title: '职业'}
+                    // ,{field:'wealth', width:135, title: '财富', sort: true}
+                ]
+            ]
+            ,page: true
+        });
+    });
+</script>
+</body>
+</html>
