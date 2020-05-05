@@ -4,27 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>MBS Admin System</title>
-    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo"><i class="layui-icon layui-icon-username" id="icon"></i><span class="system-title">Admin</span></div>
-        <!-- 头部区域（可配合layui已有的水平导航） -->
-<!--        <ul class="layui-nav layui-layout-left">-->
-<!--            <li class="layui-nav-item"><a href="">控制台</a></li>-->
-<!--            <li class="layui-nav-item"><a href="">商品管理</a></li>-->
-<!--            <li class="layui-nav-item"><a href="">用户</a></li>-->
-<!--            <li class="layui-nav-item">-->
-<!--                <a href="javascript:;">其它系统</a>-->
-<!--                <dl class="layui-nav-child">-->
-<!--                    <dd><a href="">邮件管理</a></dd>-->
-<!--                    <dd><a href="">消息管理</a></dd>-->
-<!--                    <dd><a href="">授权管理</a></dd>-->
-<!--                </dl>-->
-<!--            </li>-->
-<!--        </ul>-->
+
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
@@ -33,10 +20,10 @@
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">Profile</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="">Modify Record</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="">Sign Out</a></li>
         </ul>
 
     </div>
@@ -46,45 +33,202 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">所有商品</a>
+                    <a class="" href="javascript:;">All Meeting-Rooms</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="javascript:;">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="javascript:;">Already Booked</a></dd>
+                        <dd><a href="javascript:;">Not Booked</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
+<!--                <li class="layui-nav-item">-->
+<!--                    <a href="javascript:;">解决方案</a>-->
+<!--                    <dl class="layui-nav-child">-->
+<!--                        <dd><a href="javascript:;">列表一</a></dd>-->
+<!--                        <dd><a href="javascript:;">列表二</a></dd>-->
+<!--                        <dd><a href="">超链接</a></dd>-->
+<!--                    </dl>-->
+<!--                </li>-->
+<!--                <li class="layui-nav-item"><a href="">云市场</a></li>-->
+                <li class="layui-nav-item"><a href="">Create MeetingRoom</a></li>
             </ul>
         </div>
     </div>
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 15px;">内容主体区域</div>
+        <div style="padding: 15px;">
+            <table id="adminRoomTable" lay-filter="roomTable"></table>
+        </div>
     </div>
+
+    <script type="text/html" id="bar">
+        <button class="layui-btn layui-btn-sm  layui-btn-normal" lay-event="edit"> <i class="layui-icon">&#xe642;</i>Edit</button>
+        <button class="layui-btn layui-btn-sm  layui-btn-danger" lay-event="del"><i class="layui-icon">&#xe640;</i>Delete</button>
+    </script>
+
+    <script type="text/html" id="toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>Create New Room</button>
+        </div>
+    </script>
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        © layui.com - 底部固定区域
+        © JI Meeting Room Booking Admin System
     </div>
 </div>
-<script th:src="@{/webjars/layui/2.5.6/src/layui.js}"></script>
+
+<div id="roomAdd">
+    <div class="new-room-form">
+        <form id="addRoomForm" class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Room Number</label>
+                <div class="layui-input-block">
+                    <input type="text" name="roomNumber"  required  lay-verify="required" placeholder="Room number" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Capacity</label>
+                <div class="layui-input-block">
+                    <input type="text" name="capacities" required  lay-verify="required" placeholder="Capacity" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Price</label>
+                <div class="layui-input-block">
+                    <input type="text" name="price" required  lay-verify="required" placeholder="Price" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="submitRoomFormButton">Submit</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/3.2.1/dist/jquery.js}"></script>
+<script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
 <script>
+
     //JavaScript代码区域
     layui.use('element', function(){
         var element = layui.element;
 
     });
+
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#adminRoomTable'
+            ,url:'/rooms'
+            ,toolbar: '#toolbar'
+            ,cellMinWidth: 80
+            ,cols: [
+                [
+                    {field:'roomNumber', title: 'Meeting Room Number', sort: true}
+                    ,{field:'capacities',  title: 'Capacity'}
+                    ,{field:'price',  title: 'Price'}
+                    ,{fixed:'', align:'center', title: 'Operation', toolbar: "#bar"}
+                    // ,{field:'city', width:80, title: '城市'}
+                    // ,{field:'sign', title: '签名', minWidth: 150}
+                    // ,{field:'experience', width:80, title: '积分', sort: true}
+                    // ,{field:'score', width:80, title: '评分', sort: true}
+                    // ,{field:'classify', width:80, title: '职业'}
+                    // ,{field:'wealth', width:135, title: '财富', sort: true}
+                ]
+            ]
+            ,page: true
+            ,limit: 10
+        });
+
+        table.on('tool(roomTable)', function (obj) {
+           var data = obj.data, layEvent = obj.event;
+           if (layEvent === 'del') {
+               var layer = layui.layer;
+               layer.open({
+                   content: 'Confirm to delete?',
+                   btn: ['Yes', 'No'],
+                   yes: function (index, layero) {
+                       $.ajax({
+                           url: "/room/" + data.roomNumber,
+                           async : true,
+                           type:'DELETE',
+                           success: function () {
+                               alert("Delete Succeed!");
+                               layer.close(index);
+                               to_page();
+                           }
+                       })
+                   },
+                   btn2: function (index, layero) {
+                       layer.close();
+                   }
+               })
+           } else if (layEvent === 'edit') {
+               layer.msg("Edit");
+           }
+        });
+
+        table.on('toolbar(roomTable)', function(obj){
+            $("#addRoomForm")[0].reset();
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (obj.event === 'add') {
+                layui.use('layer', function () {
+                    var $ = layui.jquery, layer = layui.layer;
+                    layer.open({
+                        type: 1,
+                        area: ['400px', '300px'],
+                        shadeClose: true,
+                        title: 'Create New Meeting Room',
+                        content:$('#roomAdd')
+                    });
+                })
+            }
+        });
+    });
+
+    $("#submitRoomFormButton").click(function () {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                content: 'Confirm Submission?',
+                btn: ['Yes', 'No'],
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: "/room",
+                        type: "POST",
+                        data: $("#addRoomForm").serialize(),
+                        success: function () {
+                            layer.msg("Submit Succeed!");
+                            layer.closeAll();
+                            to_page();
+                        }
+                    });
+                },
+                btn2: function (index, layero) {
+                    layer.close(index);
+                }
+            })
+        });
+    });
+
+    function to_page() {
+        $.ajax({
+            url: "/admin",
+            type: "GET",
+            success: function () {
+                var table = layui.table;
+                table.reload('adminRoomTable', {
+                    url: '/rooms'
+                })
+            }
+        })
+    }
+
+
 </script>
 </body>
 </html>

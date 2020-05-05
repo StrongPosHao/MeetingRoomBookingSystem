@@ -15,4 +15,6 @@ public interface MeetingRoomMapper {
     void saveMeetingRoom(MeetingRoom meetingRoom);
 
     List<MeetingRoom> getAllMeetingRooms();
+
+    void deleteMeetingRoom(String roomNumber);
 }

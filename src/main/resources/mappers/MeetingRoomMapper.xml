@@ -6,11 +6,15 @@
     </select>
 
     <select id="getAllMeetingRooms" resultType="com.example.booking.bean.MeetingRoom">
-        select * from meetingroom;
+        select * from meetingroom
     </select>
 
     <insert id="saveMeetingRoom" parameterType="com.example.booking.bean.MeetingRoom">
         insert into meetingroom (room_number, capacities, price) values (#{roomNumber}, #{capacities}, #{price})
     </insert>
+
+    <delete id="deleteMeetingRoom" parameterType="String">
+        delete from meetingroom where room_number = #{roomNumber}
+    </delete>
 
 </mapper>

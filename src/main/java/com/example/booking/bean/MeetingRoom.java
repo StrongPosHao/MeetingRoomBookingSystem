@@ -1,7 +1,7 @@
 package com.example.booking.bean;
 
 
-public class MeetingRoom {
+public class MeetingRoom implements Comparable<MeetingRoom> {
 
     private String roomNumber;
 
@@ -40,5 +40,10 @@ public class MeetingRoom {
                 ", capacities=" + capacities +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public int compareTo(MeetingRoom o) {
+        return Integer.parseInt(this.roomNumber) - Integer.parseInt(o.getRoomNumber());
     }
 }

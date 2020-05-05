@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>JI Meeting-Room Booking Service</title>
-    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/index.css}" type="text/css">
 </head>
 <body class="layui-layout-body">
@@ -56,7 +56,7 @@
 
         table.render({
             elem: '#test'
-            ,url:'/table/rooms'
+            ,url:'/rooms'
             ,cols: [
                 [
                     {field:'roomNumber', width:400, title: 'Meeting Room Number', sort: true}

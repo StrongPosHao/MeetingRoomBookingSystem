@@ -39,11 +39,11 @@ public class MyMvcConfig implements WebMvcConfigurer {
                 // register user login handler interceptor
                 registry.addInterceptor(new UserLoginHandlerInterceptor()).addPathPatterns("/**")
                         .excludePathPatterns("/login.html", "/", "/user/login",
-                                "/admin-login.html", "/admin/login", "/admin",
+                                "/admin-login.html", "/room/**", "/rooms", "/admin/**",
                                 "/webjars/**", "/css/**", "/image/**", "/js/**");
                 registry.addInterceptor(new AdminLoginHandlerInterceptor()).addPathPatterns("/**")
                         .excludePathPatterns("/login.html", "/", "/user/login",
-                                "/admin-login.html", "/admin/login", "/index",
+                                "/admin-login.html", "/admin/login", "/index", "/rooms",
                                 "/webjars/**", "/css/**", "/image/**", "/js/**");
             }
         };
