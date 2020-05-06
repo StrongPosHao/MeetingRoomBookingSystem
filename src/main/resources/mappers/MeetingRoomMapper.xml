@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.booking.dao.MeetingRoomMapper">
     <select id="getMeetingRoom" parameterType="Integer" resultType="com.example.booking.bean.MeetingRoom">
-        select * from meetingroom where id = #{id}
+        select * from meetingroom where room_number = #{roomNumber}
     </select>
 
     <select id="getAllMeetingRooms" resultType="com.example.booking.bean.MeetingRoom">
@@ -13,8 +13,13 @@
         insert into meetingroom (room_number, capacities, price) values (#{roomNumber}, #{capacities}, #{price})
     </insert>
 
-    <delete id="deleteMeetingRoom" parameterType="String">
+    <delete id="deleteMeetingRoom" parameterType="int">
         delete from meetingroom where room_number = #{roomNumber}
     </delete>
+
+    <update id="updateMeetingRoom" parameterType="com.example.booking.bean.MeetingRoom">
+        update meetingroom set capacities = #{capacities}, price = #{price}
+        where room_number = #{roomNumber}
+    </update>
 
 </mapper>

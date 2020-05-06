@@ -10,11 +10,14 @@ import java.util.List;
 @Repository
 public interface MeetingRoomMapper {
 
-    MeetingRoom getMeetingRoom(String roomNumber);
+    MeetingRoom getMeetingRoom(int roomNumber);
 
     void saveMeetingRoom(MeetingRoom meetingRoom);
 
     List<MeetingRoom> getAllMeetingRooms();
 
-    void deleteMeetingRoom(String roomNumber);
+    void deleteMeetingRoom(int roomNumber);
+
+    void updateMeetingRoom(MeetingRoom meetingRoom);
+
 }

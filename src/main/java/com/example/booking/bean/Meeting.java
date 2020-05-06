@@ -1,5 +1,7 @@
 package com.example.booking.bean;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Meeting {
@@ -10,8 +12,10 @@ public class Meeting {
 
     private String roomNumber;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     public Integer getId() {

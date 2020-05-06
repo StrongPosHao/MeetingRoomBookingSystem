@@ -35,7 +35,7 @@
     <div class="layui-body">
         <!-- main body area -->
         <div style="padding: 15px;">
-            <table class="layui-hide" id="roomTable" lay-filter="roomTable"></table>
+            <table class="layui-hide" id="meetingTable" lay-filter="meetingTable"></table>
         </div>
     </div>
 
@@ -138,16 +138,19 @@
     layui.use('table', function () {
         var table = layui.table;
 
+
         table.render({
-            elem: '#roomTable'
-            , url: '/rooms'
+            elem: '#meetingTable'
+            , url: '/meeting/[[${session.user.id}]]'
             , cellMinWidth: 80
             , size: 'lg'
             , cols: [
                 [
-                    {field: 'roomNumber', title: 'Meeting Room Number', sort: true}
-                    , {field: 'capacities', title: 'Capacity'}
-                    , {field: 'price', title: 'Price', sort: true}
+                    {field: 'id', title: 'Meeting ID', sort: true}
+                    , {field: 'userId', title: 'User ID'}
+                    , {field: 'roomNumber', title: 'Meeting Room Number'}
+                    , {field: 'startTime', title: 'Start Time'}
+                    , {field: 'endTime', title: 'End Time'}
                     , {fixed: '', align: 'center', title: 'Operation', toolbar: '#bar'}
                 ]
             ]
@@ -155,7 +158,7 @@
             , limit: 10
         });
 
-        table.on('tool(roomTable)', function (obj) {
+        table.on('tool(bookTable)', function (obj) {
             var data = obj.data, layEvent = obj.event;
             if (layEvent === 'edit') {
                 $('#bookRoomForm')[0].reset();

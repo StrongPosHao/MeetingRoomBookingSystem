@@ -23,14 +23,14 @@
                     <dd><a href="">Modify Record</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">Sign Out</a></li>
+            <li class="layui-nav-item"><a th:href="@{/admin/logout}">Sign Out</a></li>
         </ul>
 
     </div>
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <!-- Left navigate area -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">All Meeting-Rooms</a>
@@ -39,22 +39,13 @@
                         <dd><a href="javascript:;">Not Booked</a></dd>
                     </dl>
                 </li>
-<!--                <li class="layui-nav-item">-->
-<!--                    <a href="javascript:;">解决方案</a>-->
-<!--                    <dl class="layui-nav-child">-->
-<!--                        <dd><a href="javascript:;">列表一</a></dd>-->
-<!--                        <dd><a href="javascript:;">列表二</a></dd>-->
-<!--                        <dd><a href="">超链接</a></dd>-->
-<!--                    </dl>-->
-<!--                </li>-->
-<!--                <li class="layui-nav-item"><a href="">云市场</a></li>-->
                 <li class="layui-nav-item"><a href="">Create MeetingRoom</a></li>
             </ul>
         </div>
     </div>
 
     <div class="layui-body">
-        <!-- 内容主体区域 -->
+        <!-- main body area -->
         <div style="padding: 15px;">
             <table id="adminRoomTable" lay-filter="roomTable"></table>
         </div>
@@ -72,7 +63,7 @@
     </script>
 
     <div class="layui-footer">
-        <!-- 底部固定区域 -->
+        <!-- footer -->
         © JI Meeting Room Booking Admin System
     </div>
 </div>
@@ -105,12 +96,41 @@
                 </div>
             </div>
         </form>
-
+    </div>
+</div>
+<div id="roomEdit">
+    <div class="new-room-form">
+        <form id="editRoomForm" class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Room Number</label>
+                <div class="layui-input-block">
+                    <input type="text" id="editRoomNumber" disabled name="roomNumber" lay-verify="required" placeholder="Room number" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Capacity</label>
+                <div class="layui-input-block">
+                    <input type="text" name="capacities" required  lay-verify="required" placeholder="Capacity" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Price</label>
+                <div class="layui-input-block">
+                    <input type="text" name="price" required  lay-verify="required" placeholder="Price" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="editRoomFormButton">Submit</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 <script th:src="@{/webjars/jquery/3.2.1/dist/jquery.js}"></script>
 <script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
-<script>
+<script th:inline="javascript">
 
     //JavaScript代码区域
     layui.use('element', function(){
@@ -126,18 +146,13 @@
             ,url:'/rooms'
             ,toolbar: '#toolbar'
             ,cellMinWidth: 80
+            ,size: 'lg'
             ,cols: [
                 [
                     {field:'roomNumber', title: 'Meeting Room Number', sort: true}
                     ,{field:'capacities',  title: 'Capacity'}
                     ,{field:'price',  title: 'Price'}
                     ,{fixed:'', align:'center', title: 'Operation', toolbar: "#bar"}
-                    // ,{field:'city', width:80, title: '城市'}
-                    // ,{field:'sign', title: '签名', minWidth: 150}
-                    // ,{field:'experience', width:80, title: '积分', sort: true}
-                    // ,{field:'score', width:80, title: '评分', sort: true}
-                    // ,{field:'classify', width:80, title: '职业'}
-                    // ,{field:'wealth', width:135, title: '财富', sort: true}
                 ]
             ]
             ,page: true
@@ -154,12 +169,11 @@
                    yes: function (index, layero) {
                        $.ajax({
                            url: "/room/" + data.roomNumber,
-                           async : true,
+                           async: true,
                            type:'DELETE',
                            success: function () {
-                               alert("Delete Succeed!");
+                               table.reload('adminRoomTable');
                                layer.close(index);
-                               to_page();
                            }
                        })
                    },
@@ -168,7 +182,42 @@
                    }
                })
            } else if (layEvent === 'edit') {
-               layer.msg("Edit");
+               $("#editRoomForm")[0].reset();
+               $("#editRoomNumber").val(data.roomNumber);
+               layui.use('layer', function () {
+                   var layer = layui.layer;
+                   layer.open({
+                       type: 1,
+                       area:["400px", "300px"],
+                       shadeClose: true,
+                       title: 'Edit Meeting Room Info',
+                       content: $('#roomEdit')
+                   })
+               });
+               $("#editRoomFormButton").click(function () {
+                   layui.use('layer', function () {
+                       var layer = layui.layer;
+                       layer.open({
+                           content: 'Confirm to edit?',
+                           btn: ['Yes', 'No'],
+                           yes: function (index, layero) {
+                               $.ajax({
+                                   url: "/room/" + data.roomNumber,
+                                   async: false,
+                                   type: 'PUT',
+                                   data: $("#editRoomForm").serialize(),
+                                   success: function () {
+                                       table.reload('adminRoomTable');
+                                       layer.closeAll();
+                                   }
+                               })
+                           },
+                           btn2: function (index, layero) {
+                               layer.close();
+                           }
+                       })
+                   })
+               })
            }
         });
 
@@ -183,7 +232,7 @@
                         area: ['400px', '300px'],
                         shadeClose: true,
                         title: 'Create New Meeting Room',
-                        content:$('#roomAdd')
+                        content: $('#roomAdd')
                     });
                 })
             }
@@ -193,6 +242,7 @@
     $("#submitRoomFormButton").click(function () {
         layui.use('layer', function () {
             var layer = layui.layer;
+            var data = $("#addRoomForm").serialize();
             layer.open({
                 content: 'Confirm Submission?',
                 btn: ['Yes', 'No'],
@@ -200,11 +250,17 @@
                     $.ajax({
                         url: "/room",
                         type: "POST",
+                        async: true,
                         data: $("#addRoomForm").serialize(),
                         success: function () {
-                            layer.msg("Submit Succeed!");
+                            var table = layui.table;
+                            table.reload('adminRoomTable', {
+                                url: "/rooms",
+                                page : {
+                                    curr: [[${session.lastPage}]]
+                                }
+                            });
                             layer.closeAll();
-                            to_page();
                         }
                     });
                 },
@@ -214,20 +270,6 @@
             })
         });
     });
-
-    function to_page() {
-        $.ajax({
-            url: "/admin",
-            type: "GET",
-            success: function () {
-                var table = layui.table;
-                table.reload('adminRoomTable', {
-                    url: '/rooms'
-                })
-            }
-        })
-    }
-
 
 </script>
 </body>

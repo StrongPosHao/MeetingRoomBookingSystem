@@ -5,6 +5,7 @@ import com.example.booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -29,6 +30,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user/login")
+    public String login() {
+        return "login";
+    }
+
     @RequestMapping("/index")
     public String index() {
         return "index";
@@ -37,6 +43,18 @@ public class UserController {
     @GetMapping("/user/register")
     public String register() {
         return "register";
+    }
+
+    @GetMapping("/user/logout")
+    public String logout(HttpSession session, SessionStatus sessionStatus) {
+        session.invalidate();
+        sessionStatus.setComplete();
+        return "redirect:/user/login";
+    }
+
+    @GetMapping("/user/meeting")
+    public String userMeeting() {
+        return "user-meeting";
     }
 
 }

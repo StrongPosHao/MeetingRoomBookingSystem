@@ -3,17 +3,17 @@ package com.example.booking.bean;
 
 public class MeetingRoom implements Comparable<MeetingRoom> {
 
-    private String roomNumber;
+    private int roomNumber;
 
     private int capacities;
 
     private double price;
 
-    public String getRoomNumber() {
+    public int getRoomNumber() {
         return roomNumber;
     }
 
-    public void setRoomNumber(String roomNumber) {
+    public void setRoomNumber(int roomNumber) {
         this.roomNumber = roomNumber;
     }
 
@@ -44,6 +44,6 @@ public class MeetingRoom implements Comparable<MeetingRoom> {
 
     @Override
     public int compareTo(MeetingRoom o) {
-        return Integer.parseInt(this.roomNumber) - Integer.parseInt(o.getRoomNumber());
+        return this.roomNumber - o.roomNumber;
     }
 }

@@ -1,10 +1,11 @@
-package com.example.booking.bean;
+package com.example.booking.dto;
 
-import java.util.HashMap;
+import com.example.booking.bean.Meeting;
+import com.example.booking.bean.MeetingRoom;
+
 import java.util.List;
-import java.util.Map;
 
-public class Msg {
+public class MeetingDTO {
 
     private int code;
 
@@ -12,7 +13,7 @@ public class Msg {
 
     private int count;
 
-    private List<MeetingRoom> data;
+    private List<Meeting> data;
 
     public int getCode() {
         return code;
@@ -38,11 +39,11 @@ public class Msg {
         this.count = count;
     }
 
-    public List<MeetingRoom> getData() {
+    public List<Meeting> getData() {
         return data;
     }
 
-    public void setData(List<MeetingRoom> data) {
+    public void setData(List<Meeting> data) {
         this.data = data;
     }
 }

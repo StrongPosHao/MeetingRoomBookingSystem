@@ -10,7 +10,7 @@
     padding-top: 0.4cm;
 }
 
-.layui-input {
+#search-input {
     padding-left: 12px;
     color: #cccccc;
     background-color: #424652;
@@ -19,6 +19,30 @@
     height: 30px;
 }
 
+.layui-book-input {
+    width: 16em;
+}
+
+.layui-form-label {
+    width: 7em;
+}
+
 #top-bar {
     background-color: #393D49;
+}
+
+.layui-body {
+    left: 100px;
+    right: 100px;
+    top: 100px;
+}
+
+#index-footer {
+    text-align: center;
+    left: 0;
+}
+
+#roomBook {
+    display: none;
+    margin-top: 2em;
 }

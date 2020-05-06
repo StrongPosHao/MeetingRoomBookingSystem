@@ -11,7 +11,7 @@
 
 
 
-    <insert id="saveUser" parameterType="com.example.booking.bean.User">
+    <insert id="saveUser"  parameterType="com.example.booking.bean.User" useGeneratedKeys="true" keyProperty="id">
         insert into user (id, user_name, password, email) values (#{id}, #{userName}, #{password}, #{email})
     </insert>
 

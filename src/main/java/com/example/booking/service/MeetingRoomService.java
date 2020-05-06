@@ -24,7 +24,6 @@ public class MeetingRoomService {
     public PageInfo<MeetingRoom> getMeetingRoomByPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize, "room_number asc");
         List<MeetingRoom> rooms = meetingRoomMapper.getAllMeetingRooms();
-        Collections.sort(rooms);
         return new PageInfo<MeetingRoom>(rooms);
     }
 
@@ -32,8 +31,12 @@ public class MeetingRoomService {
         meetingRoomMapper.saveMeetingRoom(meetingRoom);
     }
 
-    public void deleteMeetingRoom(String roomNumber) {
+    public void deleteMeetingRoom(int roomNumber) {
         meetingRoomMapper.deleteMeetingRoom(roomNumber);
+    }
+
+    public void editMeetingRoom(MeetingRoom meetingRoom) {
+        meetingRoomMapper.updateMeetingRoom(meetingRoom);
     }
 
 

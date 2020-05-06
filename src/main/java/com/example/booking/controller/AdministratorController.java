@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -35,6 +36,13 @@ public class AdministratorController {
     @GetMapping("/admin/login")
     public String login() {
         return "admin-login";
+    }
+
+    @GetMapping("/admin/logout")
+    public String logout(HttpSession session, SessionStatus sessionStatus) {
+        session.invalidate();
+        sessionStatus.setComplete();
+        return "redirect:/admin/login";
     }
 
     @GetMapping("/admin")
