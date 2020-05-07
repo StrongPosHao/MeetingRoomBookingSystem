@@ -15,4 +15,8 @@ public interface MeetingMapper {
     void saveMeeting(Meeting meeting);
 
     List<Meeting> getMeetingByUserId(int userId);
+
+    void deleteMeeting(int id);
+
+    void updateMeeting(Meeting meeting);
 }

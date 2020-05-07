@@ -26,4 +26,12 @@ public class MeetingService {
 //        PageInfo<Meeting> userMeetings =  meetingMapper.getMeetingByUserId(userId);
         return new PageInfo<>(meetings);
     }
+
+    public void deleteMeeting(int id) {
+        meetingMapper.deleteMeeting(id);
+    }
+
+    public void modifyMeeting(Meeting meeting) {
+        meetingMapper.updateMeeting(meeting);
+    }
 }

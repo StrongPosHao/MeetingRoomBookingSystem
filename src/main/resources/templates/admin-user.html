@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>MBS Admin System</title>
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><i class="layui-icon layui-icon-username" id="icon"></i><span class="system-title">Admin</span></div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img th:src="@{/image/admin.svg}" class="layui-nav-img" alt="">
+                    Admin
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">Profile</a></dd>
+                    <dd><a href="">Modify Record</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a th:href="@{/admin/logout}">Sign Out</a></li>
+        </ul>
+
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- Left navigate area -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item"><a th:href="@{/admin}">Meeting Rooms</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/users}">Users</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- main body area -->
+        <div style="padding: 15px;">
+            <table id="adminUserTable" lay-filter="adminUserTable"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="bar">
+        <button class="layui-btn layui-btn-sm  layui-btn-danger" lay-event="del"><i class="layui-icon">&#xe640;</i>Delete</button>
+    </script>
+
+    <div class="layui-footer">
+        <!-- footer -->
+        © JI Meeting Room Booking Admin System
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/3.2.1/dist/jquery.js}"></script>
+<script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
+<script th:inline="javascript">
+
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+
+    layui.use('table', function() {
+        var table = layui.table;
+
+        table.render({
+            elem: '#adminUserTable'
+            , url: '/users'
+            , cellMinWidth: 80
+            , size: 'lg'
+            , cols: [
+                [
+                    {field: 'id', title: 'User ID', sort: true}
+                    , {field: 'userName', title: 'Username'}
+                    , {field: 'email', title: 'Email'}
+                    , {field: 'phone', title: 'Phone'}
+                    , {field: 'company', title: 'Company'}
+                    , {fixed: '', align: 'center', title: 'Operation', toolbar: "#bar"}
+                ]
+            ]
+            , page: true
+            , limit: 10
+        });
+
+        table.on('tool(adminUserTable)', function (obj) {
+            var data = obj.data, layEvent = obj.event;
+            if (layEvent === 'del') {
+                var layer = layui.layer;
+                layer.open({
+                    content: 'Confirm to delete?',
+                    btn: ['Yes', 'No'],
+                    yes: function (index, layero) {
+                        $.ajax({
+                            url: "/admin/user/" + data.id,
+                            async: true,
+                            type: 'DELETE',
+                            success: function () {
+                                table.reload('adminUserTable');
+                                layer.close(index);
+                            }
+                        })
+                    },
+                    btn2: function (index, layero) {
+                        layer.close();
+                    }
+                })
+            }
+        })
+    });
+
+
+
+
+
+
+</script>
+</body>
+</html>

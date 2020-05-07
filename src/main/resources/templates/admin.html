@@ -15,7 +15,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <img th:src="@{/image/admin.svg}" class="layui-nav-img" alt="">
                     Admin
                 </a>
                 <dl class="layui-nav-child">
@@ -32,14 +32,8 @@
         <div class="layui-side-scroll">
             <!-- Left navigate area -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">All Meeting-Rooms</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">Already Booked</a></dd>
-                        <dd><a href="javascript:;">Not Booked</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="">Create MeetingRoom</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin}">Meeting Rooms</a></li>
+                <li class="layui-nav-item"><a th:href="@{/admin/users}">Users</a></li>
             </ul>
         </div>
     </div>
@@ -110,13 +104,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">Capacity</label>
                 <div class="layui-input-block">
-                    <input type="text" name="capacities" required  lay-verify="required" placeholder="Capacity" autocomplete="off" class="layui-input">
+                    <input type="text" id="editRoomCapacity" name="capacities" required  lay-verify="required" placeholder="Capacity" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">Price</label>
                 <div class="layui-input-block">
-                    <input type="text" name="price" required  lay-verify="required" placeholder="Price" autocomplete="off" class="layui-input">
+                    <input type="text" id="editRoomPrice" name="price" required  lay-verify="required" placeholder="Price" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -132,7 +126,6 @@
 <script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
 <script th:inline="javascript">
 
-    //JavaScript代码区域
     layui.use('element', function(){
         var element = layui.element;
 
@@ -184,6 +177,8 @@
            } else if (layEvent === 'edit') {
                $("#editRoomForm")[0].reset();
                $("#editRoomNumber").val(data.roomNumber);
+               $("#editRoomCapacity").val(data.capacities);
+               $("#editRoomPrice").val(data.price);
                layui.use('layer', function () {
                    var layer = layui.layer;
                    layer.open({
@@ -242,7 +237,6 @@
     $("#submitRoomFormButton").click(function () {
         layui.use('layer', function () {
             var layer = layui.layer;
-            var data = $("#addRoomForm").serialize();
             layer.open({
                 content: 'Confirm Submission?',
                 btn: ['Yes', 'No'],
@@ -257,7 +251,7 @@
                             table.reload('adminRoomTable', {
                                 url: "/rooms",
                                 page : {
-                                    curr: [[${session.lastPage}]]
+                                    curr: 3
                                 }
                             });
                             layer.closeAll();

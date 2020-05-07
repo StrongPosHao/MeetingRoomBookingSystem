@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>JI Meeting-Room Booking Service</title>
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/profile.css}" type="text/css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header" id="top-bar">
+        <a th:href="@{/index}"><div class="layui-logo"><i class="layui-icon layui-icon-tree"></i><span class="system-title">MBS</span></div></a>
+        <div class="layui-nav layui-layout-left" id="search">
+            <input type="text" name="title" required lay-verify="required" placeholder="Please input room number"
+                   autocomplete="off"
+                   class="layui-input" id="search-input">
+        </div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img th:src="@{/image/user.png}" class="layui-nav-img">
+                    [[${session.user.userName}]]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">Profile</a></dd>
+                    <dd><a th:href="@{/user/meeting}">Meeting</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a th:href="@{/user/logout}">Log Out</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-body">
+        <!-- main body area -->
+        <form class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">User Name</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="userNameInput" name="userName" th:value="${session.user.userName}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">Email</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="emailInput" disabled th:value="${session.user.email}" name="email" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Phone</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phoneNumberInput" lay-verify="required|phone" th:value="${session.user.phone}" name="phoneNumber" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Birthday</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthday" th:value="${#dates.format(session.user.birthday, 'yyyy-MM-dd')}" class="layui-input" id="birthday" placeholder="yyyy-MM-dd">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Company</label>
+                <div class="layui-input-block">
+                    <input type="text" id="companyInput" th:value="${session.user.company}" name="company" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">About Me</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="Say something about you~" th:text="${session.user.intro}" id="introArea" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" id="updateProfile">Submit</button>
+            </div>
+        </form>
+
+    </div>
+
+
+    <div class="layui-footer" id="index-footer">
+        <!-- footer -->
+        © JI Meeting Room Booking System
+    </div>
+
+
+</div>
+<script th:src="@{/webjars/jquery/3.2.1/dist/jquery.js}"></script>
+<script th:src="@{/webjars/layui/2.5.6/layui.js}"></script>
+<script th:inline="javascript">
+    layui.use('element', function () {
+        var element = layui.element;
+
+    });
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#birthday',
+            lang: 'en'
+        })
+    });
+
+    // $("#userNameInput").val([[${session.user.userName}]]);
+    // $("#emailInput").val([[${session.user.email}]]);
+    // $("#phoneNumberInput").val([[${session.user.phone}]]);
+    // $("#birthday").val([[${session.user.birthday}]]);
+    // $("#companyInput").val([[${session.user.company}]]);
+    // $("#introArea").val([[${session.user.intro}]]);
+    
+    $("#updateProfile").click(function () {
+        var userName = $('#userNameInput').val();
+        var email = $('#emailInput').val();
+        var phone = $('#phoneNumberInput').val();
+        var birthday = $('#birthday').val();
+        var company = $('#companyInput').val();
+        var intro = $('#introArea').val();
+        var data = 'userName=' + userName + '&email=' + email + '&phone=' + phone + '&birthday=' + birthday +
+                '&company=' + company + '&intro=' + intro;
+        console.log(data);
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                content: 'Confirm to modify?',
+                btn: ['Yes', 'No'],
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: "/user/[[${session.user.id}]]",
+                        async: true,
+                        type: 'PUT',
+                        data: data,
+                        success: function () {
+                            layui.use('form', function () {
+                                var form = layui.form;
+                                form.render();
+                            });
+                            layer.closeAll();
+                        }
+                    })
+                },
+                btn2: function (index, layero) {
+                    layer.close(index);
+                }
+            })
+        })
+
+    })
+
+</script>
+</body>
+</html>

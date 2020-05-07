@@ -15,4 +15,13 @@
         )
     </insert>
 
+    <delete id="deleteMeeting" parameterType="int">
+        delete from meeting where id = #{id}
+    </delete>
+
+    <update id="updateMeeting" parameterType="com.example.booking.bean.Meeting">
+        update meeting set start_time = #{startTime}, end_time = #{endTime}
+        where id = #{id}
+    </update>
+
 </mapper>

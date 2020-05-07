@@ -54,4 +54,9 @@ public class AdministratorController {
     public String newRoom() {
         return "new-room";
     }
+
+    @GetMapping("/admin/users")
+    public String adminUsers() {
+        return "admin-user";
+    }
 }

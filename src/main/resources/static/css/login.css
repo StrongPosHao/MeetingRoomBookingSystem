@@ -78,7 +78,7 @@ a{
 .register-panel{
     background-color: rgba(138, 127, 124, 0.25);
     border-radius: 1em;
-    margin-top: 2em;
+    margin-top: 10em;
 }
 
 .logo{
@@ -115,7 +115,7 @@ a{
     text-align: center;
 }
 
-.login-form{
+.login-form {
     height: auto;
     overflow: hidden;
     padding-bottom: 1.5em;

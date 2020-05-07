@@ -9,10 +9,21 @@
         select * from user where email = #{email}
     </select>
 
-
+    <select id="getUsers" resultType="com.example.booking.bean.User">
+        select * from user
+    </select>
 
     <insert id="saveUser"  parameterType="com.example.booking.bean.User" useGeneratedKeys="true" keyProperty="id">
         insert into user (id, user_name, password, email) values (#{id}, #{userName}, #{password}, #{email})
     </insert>
+
+    <update id="updateUser" parameterType="com.example.booking.bean.User">
+        update user set user_name = #{userName}, phone = #{phone}, birthday = #{birthday}, company = #{company},
+        intro = #{intro} where id = #{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="com.example.booking.bean.User">
+        delete from user where id = #{id}
+    </delete>
 
 </mapper>

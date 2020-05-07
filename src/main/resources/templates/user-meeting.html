@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>JI Meeting-Room Booking Service</title>
     <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/index.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/user-meeting.css}" type="text/css">
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header" id="top-bar">
-        <div class="layui-logo"><i class="layui-icon layui-icon-tree"></i><span class="system-title">MBS</span></div>
+        <a th:href="@{/index}"><div class="layui-logo"><i class="layui-icon layui-icon-tree"></i><span class="system-title">MBS</span></div></a>
         <div class="layui-nav layui-layout-left" id="search">
             <input type="text" name="title" required lay-verify="required" placeholder="Please input room number"
                    autocomplete="off"
@@ -24,8 +24,8 @@
                     [[${session.user.userName}]]
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">Profile</a></dd>
-                    <dd><a th:href="@{/user/meeting}">Booking Info</a></dd>
+                    <dd><a th:href="@{/user/profile}">Profile</a></dd>
+                    <dd><a th:href="@{/user/meeting}">Meeting</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a th:href="@{/user/logout}">Log Out</a></li>
@@ -40,7 +40,8 @@
     </div>
 
     <script type="text/html" id="bar">
-        <button class="layui-btn layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe637;</i>Book</button>
+        <button class="layui-btn layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>Modify</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del"><i class="layui-icon">&#xe640;</i>Cancel</button>
     </script>
 
     <div class="layui-footer" id="index-footer">
@@ -49,32 +50,25 @@
     </div>
 
 
-    <div id="roomBook">
+    <div id="meetingModify">
         <div class="new-room-form">
-            <form id="bookRoomForm" class="layui-form" action="">
+            <form id="modifyMeetingForm" class="layui-form" action="">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">Room Number</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="bookRoomNumber" disabled name="roomNumber" lay-verify="required"
-                               placeholder="Room number" autocomplete="off" class="layui-input layui-book-input">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">Meeting ID</label>
+                        <div class="layui-input-inline">
+                            <input type="text" disabled name="meetingId" class="layui-input" id="meetingId">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">Capacity</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="bookRoomCapacity" name="capacities" disabled required
-                               lay-verify="required" placeholder="Capacity" autocomplete="off"
-                               class="layui-input layui-book-input">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">Room Number</label>
+                        <div class="layui-input-inline">
+                            <input type="text" disabled name="meetingRoomNumber" class="layui-input" id="meetingRoomNumber">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">Price</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="bookRoomPrice" name="price" disabled required lay-verify="required"
-                               placeholder="Price" autocomplete="off" class="layui-input layui-book-input">
-                    </div>
-                </div>
-
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">Start Time</label>
@@ -95,13 +89,13 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button type="button" class="layui-btn" id="bookFormButton">Submit</button>
+                        <button type="button" class="layui-btn" id="meetingModifyButton">Submit</button>
                         <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <input type="hidden" th:value="${session.user.id}" id="bookRoomUserId" name="userId"
+                        <input type="hidden" th:value="${session.user.id}" id="userId" name="userId"
                                disabled required lay-verify="required"
                                placeholder="Price" autocomplete="off" class="layui-input layui-book-input">
                     </div>
@@ -135,9 +129,9 @@
 
     });
 
-    layui.use('table', function () {
+    layui.use(['util', 'table'], function () {
         var table = layui.table;
-
+        var util = layui.util;
 
         table.render({
             elem: '#meetingTable'
@@ -147,7 +141,6 @@
             , cols: [
                 [
                     {field: 'id', title: 'Meeting ID', sort: true}
-                    , {field: 'userId', title: 'User ID'}
                     , {field: 'roomNumber', title: 'Meeting Room Number'}
                     , {field: 'startTime', title: 'Start Time'}
                     , {field: 'endTime', title: 'End Time'}
@@ -158,51 +151,81 @@
             , limit: 10
         });
 
-        table.on('tool(bookTable)', function (obj) {
+        table.on('tool(meetingTable)', function (obj) {
             var data = obj.data, layEvent = obj.event;
             if (layEvent === 'edit') {
-                $('#bookRoomForm')[0].reset();
-                $('#bookRoomNumber').val(data.roomNumber);
-                $('#bookRoomCapacity').val(data.capacities);
-                $('#bookRoomPrice').val(data.price);
+                $('#modifyMeetingForm')[0].reset();
+                $('#userId').val(data.userId);
+                $('#meetingId').val(data.id);
+                $('#meetingRoomNumber').val(data.roomNumber);
+                $('#start-time').val(data.startTime);
+                $('#end-time').val(data.endTime);
                 layui.use('layer', function () {
                     var layer = layui.layer;
                     layer.open({
                         type: 1,
                         area: ['400px', '500px'],
                         shadeClose: true,
-                        title: 'Book Meeting Room',
-                        content: $('#roomBook')
+                        title: 'Modify Meeting',
+                        content: $('#meetingModify')
                     })
                 });
-                $('#bookFormButton').click(function () {
+                $('#meetingModifyButton').click(function () {
+                    var meetingId = $('#meetingId').val();
+                    var userId = $('#userId').val();
+                    var roomNumber = $('#meetingRoomNumber').val();
+                    var startTime = $('#start-time').val();
+                    var endTime = $('#end-time').val();
+                    var data = 'id=' + meetingId + '&userId=' + userId +
+                            '&roomNumber=' + roomNumber + '&startTime=' + startTime + '&endTime=' + endTime;
                     layui.use('layer', function () {
                         var layer = layui.layer;
-                        var userId = $('#bookRoomUserId').val();
-                        var roomNumber = $('#bookRoomNumber').val();
-                        var startTime = $('#start-time').val();
-                        var endTime = $('#end-time').val();
-                        var data = 'userId=' + userId + '&roomNumber=' +
-                            roomNumber + '&startTime=' + startTime + '&endTime=' + endTime;
-                        console.log(data);
                         layer.open({
-                            content: 'Confirm to book?',
+                            content: 'Comfirm to modify?',
                             btn: ['Yes', 'No'],
                             yes: function (index, layero) {
                                 $.ajax({
-                                    url: "/meeting",
+                                    url: '/meeting/' + meetingId,
                                     async: true,
-                                    type: 'POST',
+                                    type: 'PUT',
                                     data: data,
                                     success: function () {
-                                        table.reload('roomTable');
+                                        table.reload('meetingTable');
                                         layer.closeAll();
                                     }
                                 })
+                            },
+                            btn2: function (index, layero) {
+                                layer.close();
                             }
                         })
+
                     })
                 })
+            } else if (layEvent === 'del') {
+                var meetingData = obj.data;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        content: 'Confirm to delete?',
+                        btn: ['Yes', 'No'],
+                        yes: function (index, layero) {
+                            $.ajax({
+                                url: '/meeting/' + meetingData.id,
+                                async: true,
+                                type: 'DELETE',
+                                success: function () {
+                                    table.reload('meetingTable');
+                                    layer.close(index);
+                                }
+                            })
+                        },
+                        btn2: function (index, layero) {
+                            layer.close();
+                        }
+                    })
+                });
+
             }
         });
     });

@@ -37,5 +37,17 @@ public class MeetingController {
         return msg;
     }
 
+    @DeleteMapping("/meeting/{id}")
+    @ResponseBody
+    public void deleteMeeting(@PathVariable("id") int id) {
+        meetingService.deleteMeeting(id);
+    }
+
+    @PutMapping("/meeting/{id}")
+    @ResponseBody
+    public void modifyMeeting(Meeting meeting) {
+        meetingService.modifyMeeting(meeting);
+    }
+
 
 }
